@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import { v4 as uuidv4 } from 'uuid';
 
 import { pool } from "../../index";
+import { decideStatus } from "./utils";
 
 export const crawl = async (data: Request) => {
 	const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
@@ -29,16 +30,5 @@ export const crawl = async (data: Request) => {
 export const jobStatus = async (data: Request) => {
 	const status = await pool.select("status").where("uuid", "=", data.params.jobId).from("jobs");
 
-	if (!status.length) {
-		return { status: "ERROR" };
-	}
-
-	switch (status[0].status) {
-		case 0:
-			return { status: "PENDING" };
-		case 1:
-			return { status: "SUCCESSFUL"};
-		default:
-			return { status: "ERROR"};
-	}
+	return decideStatus(status);
 }
