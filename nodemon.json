@@ -1,0 +1,6 @@
+{
+	"watch": ["src", "openapi.yaml"],
+	"exec": "npm-run-all tsc ts-node",
+	"ext": "ts"
+}
+  
